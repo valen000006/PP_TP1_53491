@@ -1,7 +1,14 @@
+package modelo;
+
+import modelo.actividades.Actividad;
+import modelo.actividades.Charla;
+import modelo.actividades.Taller;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventoUniversitario {
+public class EventoUniversitario implements Serializable {
     private final String id;
     private String titulo;
     private double costoBase;
@@ -95,18 +102,62 @@ public class EventoUniversitario {
     }
 
     public void crearActividad(int id, String titulo, int cupoMaximo, String tipo, String disertante, boolean requiereNotebook) {
-        if (tipo.equals("Charla")){
+        if (tipo.equals("modelo.actividades.Charla")){
             this.actividades.add(new Charla(id, titulo, cupoMaximo, disertante));
         }
-        else if(tipo.equals("Taller")){
+        else if(tipo.equals("modelo.actividades.Taller")){
             this.actividades.add(new Taller(id, titulo, cupoMaximo, requiereNotebook));
         }
 
     }
+    public <T extends Actividad> List<T> filtrarActividadesPorTipo(Class<T> tipo) {
+        List<T> resultado = new ArrayList<>();
+
+        for (Actividad actividad : actividades) {
+            if (tipo.isInstance(actividad)) {
+                resultado.add(tipo.cast(actividad));
+            }
+        }
+
+        return resultado;
+    }
+
+    public double calcularCostoMateriales(List<? extends Actividad> actividades) {
+        double total = 0.0;
+
+        for (Actividad actividad : actividades) {
+            total += actividad.calcularCostoMateriales();
+        }
+
+        return total;
+    }
+
     public void mostrarDatos(){
         System.out.println("Evento " + id + " " + titulo);
         System.out.println("Costo estimado " + calcularCostoEstimado());
         System.out.println("Gratuito " + gratuito);
+    }
+    public boolean persistirEvento() throws IOException {
+        String nombreArchivo = "evento_" + this.Id + ".dat";
+        try (ObjectOutputStream oos =  //Se usa un patron try-with-resources para garantizar que se cierren los recursos aun si se produjera una excepcion.
+                     new ObjectOutputStream(
+                             new FileOutputStream(nombreArchivo))) {
+
+            oos.writeObject(this);
+            return true;
+        }
+    }
+
+    public EventoUniversitario recuperarEvento(String id)  throws IOException, ClassNotFoundException {
+
+        String nombreArchivo = "evento_" + id + ".dat";
+
+        try (ObjectInputStream ois =  //Se usa un patron try-with-resources para devolver el objeto recuperado
+                     new ObjectInputStream(
+                             new FileInputStream(nombreArchivo))) {
+
+            return (EventoUniversitario) ois.readObject();
+        }
     }
 
 }

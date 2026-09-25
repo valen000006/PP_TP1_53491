@@ -1,4 +1,9 @@
-public class Taller extends Actividad {
+package modelo.actividades;
+
+import modelo.Estudiante;
+import modelo.certificacion.Certificable;
+
+public class Taller extends Actividad implements Certificable {
     private boolean requiereNotebook;
 
     public Taller (int id, String titulo, int cupoMaximo, boolean requiereNotebook){
@@ -13,7 +18,7 @@ public class Taller extends Actividad {
 
     @Override
     public String getTipo() {
-        return "Taller";
+        return "modelo.actividades.Taller";
     }
 
     public boolean isRequiereNotebook() {
@@ -22,5 +27,12 @@ public class Taller extends Actividad {
 
     public void setRequiereNotebook(boolean requiereNotebook) {
         this.requiereNotebook = requiereNotebook;
+    }
+
+    @Override
+    public String generarCertificado(Estudiante estudiante) {
+        return "Certificado emitido por " + ENTIDAD_EMISORA
+                + ": se deja constancia de que " + estudiante.getNombre()
+                + " participó en el taller \"" + getTitulo() + "\".";
     }
 }

@@ -1,3 +1,9 @@
+package modelo.actividades;
+
+import excepciones.CupoExcedidoException;
+import modelo.Estudiante;
+import modelo.Inscripcion;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +22,21 @@ public abstract class Actividad {
         this.cupoMaximo=cupoMaximo;
     }
 
-    public Inscripcion inscribir (Estudiante estudiante){
+    public Inscripcion inscribir (Estudiante estudiante) throws CupoExcedidoException{
+        if (inscripciones.size() >= cupoMaximo) {
+           throw new CupoExcedidoException("No se puede inscribir al estudiante " + estudiante.getNombre() + ". Cupo máximo alcanzado.");
+        }
         Inscripcion nuevaInscripcion = new Inscripcion (estudiante);
         this.inscripciones.add(nuevaInscripcion);
         return nuevaInscripcion;
+    }
+
+    public List<Inscripcion> getInscripciones() {
+        return inscripciones;
+    }
+
+    public void setInscripciones(List<Inscripcion> inscripciones) {
+        this.inscripciones = inscripciones;
     }
 
     public void mostrarInscripciones (){
@@ -32,8 +49,20 @@ public abstract class Actividad {
     }
 
     public final void mostrarIdentificacion(){
-        System.out.println("Actividad [" + getTipo() + "]: " + titulo + " | Cupo Máximo: " + cupoMaximo);
+        System.out.println("modelo.actividades.Actividad [" + getTipo() + "]: " + titulo + " | Cupo Máximo: " + cupoMaximo);
 
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public abstract double calcularCostoMateriales();
