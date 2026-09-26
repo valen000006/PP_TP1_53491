@@ -42,7 +42,7 @@ Sala: Define la capacidad y el nombre del aula asignada.
 CupoExcedidoException: Excepción personalizada que se dispara al intentar inscribir estudiantes sobrepasando el límite permitido.
 
 Cómo ejecutar el programa
-Abrir el proyecto en IntelliJ IDEA (o cualquier IDE Java compatible con JDK 17+).
+Abrir el proyecto 
 
 Verificar que las clases del paquete modelo implementen Serializable.
 
